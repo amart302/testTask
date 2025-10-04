@@ -1,18 +1,25 @@
-// import { sequelize } from "../db.js";
-// import { User } from "./User.js";
-// import { Room } from "./Room.js";
-// import { Booking } from "./Booking.js";
+import { sequelize } from "../db.js";
+import { User } from "./User.js";
+import { File } from "./File.js";
 
-// const db = {
-//     User,
-//     Room,
-//     Booking,
-//     sequelize
-// };
+const db = {
+    User,
+    File,
+    sequelize
+};
 
-// db.associate = () => {
-//     db.Booking.belongsTo(db.User, { foreignKey: "userId" });
-//     db.Booking.belongsTo(db.Room, { foreignKey: "roomId" });
-// };
+db.associate = () => {
+    db.User.hasMany(db.File, { 
+        foreignKey: "userId",
+        as: "files",
+        onDelete: "CASCADE"
+    });
+    
+    db.File.belongsTo(db.User, { 
+        foreignKey: "userId",
+        as: "user",
+        onDelete: "CASCADE"
+    });
+};
 
-// export default db;
+export default db;

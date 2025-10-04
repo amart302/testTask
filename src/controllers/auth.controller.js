@@ -8,7 +8,7 @@ const generateAccessToken = (id, role) => {
     return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "7d" });
 };
 
-export async function signup(req, res) {
+export async function signup(req, res){
     try {
         const { fullName, email, password, } = req.body;
         const hashPassword = bcrypt.hashSync(password, 8);
@@ -36,7 +36,7 @@ export async function signup(req, res) {
     }
 };
 
-export async function signin(req, res) {
+export async function signin(req, res){
     try {
         const { email, password, } = req.body;
 

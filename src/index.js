@@ -5,8 +5,8 @@ import { getDirname } from "./utils/pathUtils.js";
 import path from "path";
 import { startConnection } from "./db.js";
 import authRoutes from "./routes/auth.routes.js";
-import usersRoutes from "./routes/users.routes.js";
-// import db from "./models/index.js";
+import userRoutes from "./routes/user.routes.js";
+import db from "./models/index.js";
 
 const app = express();
 const __dirname = getDirname(import.meta.url);
@@ -22,7 +22,7 @@ app.use(express.urlencoded({
 }));
 app.use("/media", express.static(path.join(__dirname, "../uploads")));
 app.use("/auth", authRoutes);
-app.use("/users", usersRoutes);
+app.use("/user", userRoutes);
 
 const PORT = 3000;
 
@@ -30,9 +30,9 @@ const startServer = async () => {
     try {
         console.clear();
 
-        // db.associate();
-        // await db.sequelize.sync();
-        // console.log("Ассоциации установлены, синхронизация завершена");
+        db.associate();
+        await db.sequelize.sync();
+        console.log("Ассоциации установлены, синхронизация завершена");
 
         await startConnection();
 
