@@ -6,6 +6,7 @@ import path from "path";
 import { startConnection } from "./db.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import fileRoutes from "./routes/file.routes.js";
 import db from "./models/index.js";
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(express.urlencoded({
 app.use("/media", express.static(path.join(__dirname, "../uploads")));
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/file", fileRoutes);
 
 const PORT = 3000;
 

@@ -1,17 +1,17 @@
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { User } from "../models/User.js";
+import { hashingPassword, verifyPassword } from "../utils/passwordUtils.js";
 
 const generateAccessToken = (id, role) => {
     const payload = { id, role };
     return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "7d" });
-};
+}
 
 export async function signup(req, res){
     try {
         const { fullName, email, password, } = req.body;
-        const hashPassword = bcrypt.hashSync(password, 8);
+        const hashPassword = hashingPassword(password);
 
         const user = await User.findOne({
             where: {
@@ -34,7 +34,7 @@ export async function signup(req, res){
         console.error(error);
         res.status(500).json({ message: "Ошибка регистрации" });
     }
-};
+}
 
 export async function signin(req, res){
     try {
@@ -46,7 +46,7 @@ export async function signin(req, res){
             return res.status(401).json({ message: "Не правильный email или пароль! Повторите вход" });
         }
 
-        const validPassword = bcrypt.compareSync(password, user.password);
+        const validPassword = verifyPassword(password, user.password);
         if(!validPassword){
             return res.status(401).json({ message: "Не правильный email или пароль! Повторите вход" });
         }
@@ -57,4 +57,4 @@ export async function signin(req, res){
         console.error(error);
         res.status(500).json({ message: "Ошибка авторизации" });
     }
-};
+}

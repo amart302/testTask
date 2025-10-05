@@ -14,36 +14,33 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     fileFilter: function (req, file, callback) {
-        const allowedTypes = [ "image/jpeg", "image/png" ];
+        const allowedTypes = [ "image/jpeg", "image/png", "application/pdf" ];
         if(allowedTypes.includes(file.mimetype)){
             callback(null, true);
         }else{
-            callback(new Error("Допускаются только файлы формата JPG / JPEG / PNG"), false);
+            callback(new Error("Допускаются только файлы формата JPG / JPEG / PNG / PDF"), false);
         }
     },
     limits: {
         fileSize: 10 * 1024 * 1024,
-        files: 5
+        files: 1
     }
 });
 
-export const createUploadMiddleware = (fieldName, check = null) => {
+export const createUploadMiddleware = (fieldName) => {
     return (req, res, next) => {
-        upload.array(fieldName)(req, res, (err) => {
+        upload.single(fieldName)(req, res, (err) => {
             try {
                 if(err){
                     let errorMessage;
                     let statusCode = 400;
 
                     switch(err.code) {
-                        case "LIMIT_FILE_COUNT":
-                            errorMessage = "Максимальное количество файлов: 5";
-                            break;
                         case "LIMIT_FILE_SIZE":
                             errorMessage = "Максимальный размер файла: 10MB";
                             break;
                         case err.message === "Неверный тип файла":
-                            errorMessage = "Допускаются только файлы формата JPG / JPEG / PNG";
+                            errorMessage = "Допускаются только файлы формата JPG / JPEG / PNG / PDF";
                             statusCode = 415;
                             break;
                         default:
@@ -54,7 +51,9 @@ export const createUploadMiddleware = (fieldName, check = null) => {
                     return res.status(statusCode).json({ message: errorMessage });
                 }
 
-                if(check && (!req.files || req.files.length === 0)) return res.status(400).json({ message: "Добавьте файлы" });
+                if(!req.file){
+                    return res.status(400).json({ message: "Загрузите файл" });
+                }
 
                 next();
             } catch (error) {

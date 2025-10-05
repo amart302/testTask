@@ -1,6 +1,6 @@
-use mattLoam;
+use testTask;
 
-drop table bookings;
+drop table files;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,10 +16,14 @@ CREATE TABLE files (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL,
     originalName VARCHAR(500) NOT NULL,
-    fileName VARCHAR(500) UNIQUE NOT NULL,
+    fileName VARCHAR(500) NOT NULL UNIQUE,
     path VARCHAR(100) NOT NULL,
     mimeType VARCHAR(100) NOT NULL,
     size INT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX (userId),
+    INDEX (fileName)
 );

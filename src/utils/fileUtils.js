@@ -2,21 +2,15 @@ import fs from "fs/promises";
 import { join } from "path";
 import { getDirname } from "./pathUtils.js";
 
-export async function deleteFilesByName(files){
+export async function deleteFileByName(fileName){
     try {
         const __dirname = getDirname(import.meta.url);
         
-        if(files){
-            await Promise.all(files.map(async item => {
-                const filePath = "../../uploads";
-                try {
-                    await fs.unlink(join(__dirname, filePath, item));
-                } catch (error) {
-                    console.error(`Не удалось удалить файл`, error.message);
-                }
-            }));
+        if(fileName){
+            const filePath = "../../uploads";
+            await fs.unlink(join(__dirname, filePath, fileName));
         }
     } catch (error) {
-        console.error(error.message);
+        throw error;
     }
 }
