@@ -1,8 +1,6 @@
 create database testTask;
 use testTask;
 
-drop table messages;
-
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,

@@ -26,7 +26,6 @@ export const setupWebSocket = async(PORT) => {
     ws.on("message", async(message) => {
       try {
         const parseMessage = JSON.parse(message);
-        
         const savedMessage = await createMessage(parseMessage);
 
         broadcast(JSON.stringify({
