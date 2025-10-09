@@ -23,7 +23,7 @@ export async function getUserData(req, res){
 export async function updateUserData(req, res){
     try {
         const { id } = req.user;
-        const { fullName, email } = req.body;
+        const { fullName, email, oldPassword, newPassword } = req.body;
 
         const user = await User.findByPk(id);
         
@@ -31,27 +31,8 @@ export async function updateUserData(req, res){
             return res.status(404).json({ message: "Пользователь не найден" });
         }
 
-        await user.update({
-            fullName,
-            email
-        });
-
-        res.status(200).json({ message: "Данные пользователя успешно обновлен" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Не удалось изменить данные пользователя" });
-    }
-}
-
-export async function changePassword(req, res){
-    try {
-        const { id } = req.user;
-        const { oldPassword, newPassword } = req.body;
-
-        const user = await User.findByPk(id);
-        
-        if(!user){
-            return res.status(404).json({ message: "Пользователь не найден" });
+        if(oldPassword === newPassword){
+            return res.status(400).json({ message: "Новый пароль не должен совпадать со старым" });
         }
 
         const validPassword = verifyPassword(oldPassword, user.password);
@@ -60,14 +41,17 @@ export async function changePassword(req, res){
         }
 
         const hashPassword = hashingPassword(newPassword);
+
         await user.update({
+            fullName,
+            email,
             password: hashPassword
         });
 
-        res.status(200).json({ message: "Пароль успешно изменен" });
+        res.status(200).json({ message: "Данные пользователя обновлены" });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Не удалось сменить пароль" });
+        res.status(500).json({ error: "Не удалось изменить данные пользователя" });
     }
 }
 

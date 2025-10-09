@@ -1,6 +1,7 @@
+create database testTask;
 use testTask;
 
-drop table files;
+drop table messages;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -12,18 +13,26 @@ CREATE TABLE users (
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE files (
+CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT NOT NULL,
-    originalName VARCHAR(500) NOT NULL,
-    fileName VARCHAR(500) NOT NULL UNIQUE,
-    path VARCHAR(100) NOT NULL,
-    mimeType VARCHAR(100) NOT NULL,
-    size INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    file VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX (userId),
-    INDEX (fileName)
+    INDEX (userId)
+);
+
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    text TEXT NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX (userId)
 );

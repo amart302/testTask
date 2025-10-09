@@ -1,12 +1,7 @@
-import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { User } from "../models/User.js";
 import { hashingPassword, verifyPassword } from "../utils/passwordUtils.js";
-
-const generateAccessToken = (id, role) => {
-    const payload = { id, role };
-    return jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "7d" });
-}
+import { generateAccessToken } from "../utils/tokenUtils.js";
 
 export async function signup(req, res){
     try {

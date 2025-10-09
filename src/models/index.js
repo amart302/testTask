@@ -1,21 +1,35 @@
 import { sequelize } from "../db.js";
 import { User } from "./User.js";
-import { File } from "./File.js";
+import { Product } from "./Product.js";
+import { Message } from "./Message.js";
 
 const db = {
     User,
-    File,
+    Product,
+    Message,
     sequelize
 };
 
 db.associate = () => {
-    db.User.hasMany(db.File, { 
+    db.User.hasMany(db.Product, { 
         foreignKey: "userId",
-        as: "files",
+        as: "products",
         onDelete: "CASCADE"
     });
     
-    db.File.belongsTo(db.User, { 
+    db.Product.belongsTo(db.User, { 
+        foreignKey: "userId",
+        as: "user",
+        onDelete: "CASCADE"
+    });
+
+    db.User.hasMany(db.Message, {
+        foreignKey: "userId",
+        as: "messages",
+        onDelete: "CASCADE"
+    });
+
+    db.Message.belongsTo(db.User, {
         foreignKey: "userId",
         as: "user",
         onDelete: "CASCADE"
